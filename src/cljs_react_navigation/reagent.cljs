@@ -80,4 +80,4 @@
 (def drawer-actions base/DrawerActions)
 (def stack-actions base/StackActions)
 (def navigation-actions base/NavigationActions)
-(def navigation-event base/NavigationEvents)
+(def navigation-events base/NavigationEvents)
