@@ -55,7 +55,7 @@
 (def tab-screen reagent/tab-screen)
 (def drawer-component reagent/drawer-component)
 (def stack-navigator reagent/stack-navigator)
-(def tab-navigator reagent/tab-navigator)
+(def tab-navigator reagent/bottom-tab-navigator)
 (def drawer-navigator reagent/drawer-navigator)
 (def switch-navigator reagent/switch-navigator)
 
@@ -69,19 +69,19 @@
 
 (def nil-fn (fn [_]))
 
+
 (defn router [{:keys [root-router init-route-name add-listener]
-               :or {add-listener nil-fn init-route-name :start-route}
-               :as props}]
-  (let [routing-sub (subscribe [::routing-state])
+               :or   {add-listener nil-fn init-route-name :start-route}
+               :as   props}]
+  (let [routing-sub       (subscribe [::routing-state])
         getStateForAction (aget root-router "router" "getStateForAction")]
     (reset! ref-getStateForAction getStateForAction)
     (fn [props]
       (let [routing-state (or @routing-sub
                               (init-state root-router init-route-name))]
         [:> root-router {:navigation
-                         (addNavigationHelpers
-                          (clj->js {:state    routing-state
-                                    :addListener add-listener
-                                    :dispatch (fn [action]
-                                                (let [next-state (getStateForAction action routing-state)]
-                                                  (dispatch [::swap-routing-state next-state])))}))}]))))
+                         (clj->js {:state       routing-state
+                                   :addListener add-listener
+                                   :dispatch    (fn [action]
+                                                  (let [next-state (getStateForAction action routing-state)]
+                                                    (dispatch [::swap-routing-state next-state])))})}]))))
